@@ -21,11 +21,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
 // BLoC pattern
 
 class BlocPattern implements BlocBase {
@@ -47,7 +42,11 @@ class BlocPattern implements BlocBase {
   }
 
   @override
-  void addListener(listener) {}
+  void addListener(listener) {
+    _stream.listen((event) {
+      print(event);
+    });
+  }
 
   @override
   void dispose() {
@@ -66,7 +65,7 @@ class BlocPattern implements BlocBase {
 
 // final bloc = BlocPattern();
 
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocPattern bloc1 = BlocProvider.getBloc<BlocPattern>();
