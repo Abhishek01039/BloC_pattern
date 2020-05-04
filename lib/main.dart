@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:bloc_pattern_app/bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
@@ -21,50 +21,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// BLoC pattern
-
-class BlocPattern implements BlocBase {
-  int counter;
-  StreamController<int> _streamController = StreamController<int>();
-  StreamSink get _sink => _streamController.sink;
-  Stream get _stream => _streamController.stream;
-
-  BlocPattern() {
-    counter = 0;
-    _sink.add(counter);
-    // _streamController.stream.listen(increment());
-  }
-
-  increment() {
-    counter++;
-    print(counter);
-    _sink.add(counter);
-  }
-
-  @override
-  void addListener(listener) {
-    _stream.listen((event) {
-      print(event);
-    });
-  }
-
-  @override
-  void dispose() {
-    _streamController?.close();
-  }
-
-  @override
-  bool get hasListeners => null;
-
-  @override
-  void notifyListeners() {}
-
-  @override
-  void removeListener(listener) {}
-}
-
-// final bloc = BlocPattern();
-
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -76,18 +32,22 @@ class Home extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder(
-            stream: bloc1._stream,
-            // initialData: bloc.counter,
-            builder: (context, snapshot) {
-              return Container(
-                child:
-                    Text("You have pressed ${snapshot.data.toString()} times"),
-              );
-            }),
+          stream: bloc1.counterStream,
+          // initialData: initialData ,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              child: snapshot.hasData
+                  ? Text(snapshot.data.toString())
+                  : CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: bloc1.increment,
-        child: Icon(Icons.add),
+        onPressed: () {
+          bloc1.increment();
+        },
+        child: Icon(Icons.ac_unit),
       ),
     );
   }
